@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Northstar Eval — Demo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Sora:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #14221c;
+      --muted: #4d5f56;
+      --paper: #eef3ef;
+      --panel: #f7faf7;
+      --line: #c9d6ce;
+      --brand: #0f6b4c;
+      --brand-deep: #0a4331;
+      --accent: #c45c26;
+      --pass: #1f7a4c;
+      --fail: #b42318;
+      --warn: #9a6700;
+      --shadow: 0 18px 50px rgba(20, 34, 28, 0.08);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: "Sora", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(1200px 600px at 10% -10%, #d7ebe1 0%, transparent 55%),
+        radial-gradient(900px 500px at 100% 0%, #f3e4d6 0%, transparent 45%),
+        linear-gradient(180deg, #f4f7f5 0%, var(--paper) 40%, #e8efe9 100%);
+      min-height: 100vh;
+    }
+
+    a { color: inherit; }
+
+    .wrap {
+      width: min(1120px, calc(100% - 2rem));
+      margin: 0 auto;
+    }
+
+    /* —— Hero —— */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      align-items: end;
+      padding: 1.25rem 0 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18vh;
+    }
+
+    .brand {
+      font-family: "Fraunces", serif;
+      font-weight: 700;
+      font-size: 1.15rem;
+      letter-spacing: -0.02em;
+    }
+
+    .brand span { color: var(--brand); }
+
+    .nav-actions {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    .pill {
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--muted);
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.55);
+      padding: 0.45rem 0.75rem;
+      border-radius: 999px;
+      backdrop-filter: blur(8px);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 2.5rem;
+      align-items: end;
+    }
+
+    .eyebrow {
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--brand);
+      margin: 0 0 0.85rem;
+    }
+
+    h1 {
+      font-family: "Fraunces", serif;
+      font-size: clamp(2.4rem, 5vw, 4.2rem);
+      line-height: 0.98;
+      letter-spacing: -0.03em;
+      margin: 0 0 1rem;
+      max-width: 11ch;
+    }
+
+    .lede {
+      font-size: 1.05rem;
+      line-height: 1.55;
+      color: var(--muted);
+      max-width: 36ch;
+      margin: 0 0 1.6rem;
+    }
+
+    .cta-row { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+
+    .btn {
+      appearance: none;
+      border: 0;
+      cursor: pointer;
+      font: inherit;
+      font-weight: 600;
+      border-radius: 999px;
+      padding: 0.85rem 1.25rem;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+    .btn:hover { transform: translateY(-1px); }
+    .btn-primary { background: var(--brand-deep); color: #f4faf7; }
+    .btn-ghost {
+      background: transparent;
+      color: var(--ink);
+      border: 1px solid var(--line);
+    }
+
+    .pipeline {
+      background: rgba(255,255,255,0.72);
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      padding: 1.25rem;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      animation: rise 0.8s ease both;
+    }
+
+    .pipeline svg { width: 100%; height: auto; display: block; }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* —— Sections —— */
+    section {
+      padding: 3.5rem 0;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    h2 {
+      font-family: "Fraunces", serif;
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      margin: 0;
+      letter-spacing: -0.02em;
+    }
+
+    .sub {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin: 0.4rem 0 0;
+      max-width: 48ch;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.9rem;
+    }
+
+    .metric {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 1.1rem 1.15rem;
+      animation: rise 0.6s ease both;
+    }
+    .metric:nth-child(2) { animation-delay: 0.05s; }
+    .metric:nth-child(3) { animation-delay: 0.1s; }
+    .metric:nth-child(4) { animation-delay: 0.15s; }
+
+    .metric .label {
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-weight: 500;
+      margin-bottom: 0.55rem;
+    }
+
+    .metric .value {
+      font-family: "Fraunces", serif;
+      font-size: 2rem;
+      letter-spacing: -0.03em;
+    }
+
+    .metric .bar {
+      margin-top: 0.85rem;
+      height: 6px;
+      background: #dce6df;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .metric .bar > i {
+      display: block;
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, var(--brand), #2f9b6d);
+      border-radius: inherit;
+      transition: width 0.8s ease;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 1.15rem;
+    }
+
+    .panel h3 {
+      margin: 0 0 0.85rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .fail-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+    }
+
+    .fail-chip {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding: 0.7rem 0.8rem;
+      border-radius: 12px;
+      background: #fff;
+      border: 1px solid var(--line);
+      font-size: 0.9rem;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.9rem;
+    }
+
+    .filter, .search {
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 999px;
+      padding: 0.55rem 0.9rem;
+      font: inherit;
+      color: var(--ink);
+    }
+    .search { min-width: min(260px, 100%); }
+
+    .table-wrap {
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+      max-height: 520px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.86rem;
+    }
+    th, td {
+      padding: 0.75rem 0.8rem;
+      border-bottom: 1px solid #e4ebe6;
+      text-align: left;
+      white-space: nowrap;
+    }
+    th {
+      position: sticky;
+      top: 0;
+      background: #f3f7f4;
+      font-weight: 600;
+      z-index: 1;
+    }
+    tr { cursor: pointer; transition: background 0.15s ease; }
+    tr:hover { background: #f3faf6; }
+    tr.active { background: #e5f3eb; }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.18rem 0.5rem;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 600;
+    }
+    .badge.pass { background: #e4f5ea; color: var(--pass); }
+    .badge.fail { background: #fde8e6; color: var(--fail); }
+    .badge.diff {
+      background: #eef2f0;
+      color: var(--muted);
+      text-transform: capitalize;
+    }
+
+    .detail {
+      display: grid;
+      gap: 0.85rem;
+    }
+    .detail .q {
+      font-family: "Fraunces", serif;
+      font-size: 1.2rem;
+      line-height: 1.25;
+      margin: 0;
+    }
+    .scores {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.5rem;
+    }
+    .score-box {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 0.65rem 0.7rem;
+    }
+    .score-box small { color: var(--muted); display: block; margin-bottom: 0.2rem; }
+    .mono {
+      white-space: pre-wrap;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 0.85rem;
+      font-size: 0.84rem;
+      line-height: 1.5;
+      max-height: 180px;
+      overflow: auto;
+    }
+
+    .status {
+      margin-top: 0.75rem;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+    .status.error { color: var(--fail); }
+
+    footer {
+      padding: 2rem 0 3rem;
+      color: var(--muted);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--line);
+    }
+
+    @media (max-width: 900px) {
+      .hero-grid, .split, .metrics { grid-template-columns: 1fr; }
+      .nav { margin-bottom: 8vh; }
+      .scores { grid-template-columns: 1fr 1fr; }
+      h1 { max-width: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap">
+      <div class="nav">
+        <div class="brand">Northstar <span>Eval</span></div>
+        <div class="nav-actions">
+          <div class="pill" id="agentPill">loading…</div>
+          <a class="btn btn-ghost" href="#cases">Xem cases</a>
+        </div>
+      </div>
+
+      <div class="hero-grid">
+        <div>
+          <p class="eyebrow">Day 14 · AI Evaluation Pipeline</p>
+          <h1>Đo chất lượng RAG trước khi ship.</h1>
+          <p class="lede">
+            Demo một vòng benchmark trên corpus Student Services:
+            retrieve → generate → chấm 5 metrics → phân tích failure.
+          </p>
+          <div class="cta-row">
+            <a class="btn btn-primary" href="#metrics">Xem kết quả benchmark</a>
+            <a class="btn btn-ghost" href="#pipeline">Luồng hệ thống</a>
+          </div>
+        </div>
+
+        <div class="pipeline" id="pipeline" aria-label="Evaluation pipeline diagram">
+          <svg viewBox="0 0 520 320" role="img">
+            <defs>
+              <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#0f6b4c"/>
+                <stop offset="100%" stop-color="#2f9b6d"/>
+              </linearGradient>
+            </defs>
+            <rect x="18" y="24" width="150" height="64" rx="16" fill="#fff" stroke="#c9d6ce"/>
+            <text x="93" y="52" text-anchor="middle" font-family="Sora" font-size="13" fill="#14221c">Golden Dataset</text>
+            <text x="93" y="70" text-anchor="middle" font-family="Sora" font-size="11" fill="#4d5f56">20 stratified QA</text>
+
+            <rect x="185" y="24" width="150" height="64" rx="16" fill="#fff" stroke="#c9d6ce"/>
+            <text x="260" y="52" text-anchor="middle" font-family="Sora" font-size="13" fill="#14221c">Domain Assistant</text>
+            <text x="260" y="70" text-anchor="middle" font-family="Sora" font-size="11" fill="#4d5f56">BM25 + Generator</text>
+
+            <rect x="352" y="24" width="150" height="64" rx="16" fill="url(#g1)"/>
+            <text x="427" y="52" text-anchor="middle" font-family="Sora" font-size="13" fill="#f4faf7">Eval Core</text>
+            <text x="427" y="70" text-anchor="middle" font-family="Sora" font-size="11" fill="#d7ebe1">template.py</text>
+
+            <path d="M168 56 H185" stroke="#0f6b4c" stroke-width="2" marker-end="url(#arrow)"/>
+            <path d="M335 56 H352" stroke="#0f6b4c" stroke-width="2"/>
+
+            <rect x="70" y="140" width="380" height="150" rx="22" fill="#14221c"/>
+            <text x="260" y="175" text-anchor="middle" font-family="Fraunces" font-size="20" fill="#f4faf7">5 metrics · pass/fail · failure taxonomy</text>
+            <text x="140" y="220" text-anchor="middle" font-family="Sora" font-size="12" fill="#9fbfb0">Context Recall</text>
+            <text x="260" y="220" text-anchor="middle" font-family="Sora" font-size="12" fill="#9fbfb0">Faithfulness</text>
+            <text x="380" y="220" text-anchor="middle" font-family="Sora" font-size="12" fill="#9fbfb0">Completeness</text>
+            <text x="140" y="250" text-anchor="middle" font-family="Sora" font-size="12" fill="#9fbfb0">Context Precision</text>
+            <text x="260" y="250" text-anchor="middle" font-family="Sora" font-size="12" fill="#9fbfb0">Relevance</text>
+            <text x="380" y="250" text-anchor="middle" font-family="Sora" font-size="12" fill="#9fbfb0">Regression gate</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="metrics">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <h2>Benchmark snapshot</h2>
+            <p class="sub">Số liệu đọc trực tiếp từ <code>artifacts/benchmark_results.json</code>.</p>
+          </div>
+          <button class="btn btn-ghost" id="reloadBtn" type="button">Reload data</button>
+        </div>
+
+        <div class="metrics" id="metricCards"></div>
+
+        <div class="split">
+          <div class="panel">
+            <h3>Dataset & agent</h3>
+            <div id="metaBox" class="detail"></div>
+            <p class="status" id="statusLine">Đang tải…</p>
+          </div>
+          <div class="panel">
+            <h3>3 cases điểm thấp nhất</h3>
+            <div class="fail-list" id="worstList"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="cases">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <h2>Case explorer</h2>
+            <p class="sub">Lọc theo difficulty / pass-fail, bấm một dòng để xem expected vs actual.</p>
+          </div>
+        </div>
+
+        <div class="toolbar">
+          <input class="search" id="searchInput" type="search" placeholder="Tìm ID hoặc question…" />
+          <select class="filter" id="diffFilter">
+            <option value="all">All difficulties</option>
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+            <option value="adversarial">Adversarial</option>
+          </select>
+          <select class="filter" id="passFilter">
+            <option value="all">All outcomes</option>
+            <option value="pass">Passed</option>
+            <option value="fail">Failed</option>
+          </select>
+        </div>
+
+        <div class="split">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Difficulty</th>
+                  <th>Overall</th>
+                  <th>Result</th>
+                </tr>
+              </thead>
+              <tbody id="caseTable"></tbody>
+            </table>
+          </div>
+          <div class="panel detail" id="caseDetail">
+            <p class="sub">Chọn một case ở bảng bên trái.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      Northstar Eval demo · AICB-P1 Day 14 · chạy bằng <code>python demo_server.py</code>
+    </div>
+  </footer>
+
+  <script>
+    const fmt = (v, digits = 3) =>
+      v == null || Number.isNaN(v) ? "n/a" : Number(v).toFixed(digits);
+    const pct = (v) => (v == null ? "n/a" : `${(Number(v) * 100).toFixed(1)}%`);
+
+    let state = { results: [], selected: null };
+
+    function metricCard(label, value, ratio) {
+      const width = Math.max(0, Math.min(1, ratio ?? 0)) * 100;
+      return `
+        <article class="metric">
+          <div class="label">${label}</div>
+          <div class="value">${value}</div>
+          <div class="bar"><i style="width:${width}%"></i></div>
+        </article>`;
+    }
+
+    function renderOverview(data) {
+      const s = data.benchmark?.summary || {};
+      const cards = document.getElementById("metricCards");
+      cards.innerHTML = [
+        metricCard("Pass rate", pct(s.pass_rate), s.pass_rate),
+        metricCard("Faithfulness", fmt(s.avg_faithfulness), s.avg_faithfulness),
+        metricCard("Relevance", fmt(s.avg_relevance), s.avg_relevance),
+        metricCard("Completeness", fmt(s.avg_completeness), s.avg_completeness),
+        metricCard("Context Recall", fmt(s.avg_context_recall), s.avg_context_recall),
+        metricCard("Context Precision", fmt(s.avg_context_precision), s.avg_context_precision),
+        metricCard("Total cases", String(s.total ?? 0), 1),
+        metricCard("Passed", `${s.passed ?? 0}/${s.total ?? 0}`, s.pass_rate),
+      ].join("");
+
+      const agent = data.actual?.agent || {};
+      document.getElementById("agentPill").textContent =
+        `${agent.model || "unknown model"} · top_k=${agent.top_k ?? "?"}`;
+
+      const diffs = data.golden?.difficulties || {};
+      document.getElementById("metaBox").innerHTML = `
+        <div class="scores">
+          <div class="score-box"><small>Corpus</small><strong>${data.golden?.corpus_id || "—"}</strong></div>
+          <div class="score-box"><small>QA pairs</small><strong>${data.golden?.qa_count ?? "—"}</strong></div>
+          <div class="score-box"><small>Answers</small><strong>${data.actual?.answer_count ?? "—"}</strong></div>
+        </div>
+        <div class="mono">Stratification: easy=${diffs.easy || 0}, medium=${diffs.medium || 0}, hard=${diffs.hard || 0}, adversarial=${diffs.adversarial || 0}
+Failure types: ${JSON.stringify(s.failure_types || {})}
+Generated: ${data.actual?.generated_at || "n/a"}</div>
+      `;
+
+      const results = data.benchmark?.results || [];
+      state.results = results;
+      const worst = [...results].sort((a, b) => a.overall - b.overall).slice(0, 3);
+      document.getElementById("worstList").innerHTML = worst.map((r, i) => `
+        <button class="fail-chip" type="button" data-id="${r.id}">
+          <span>${i + 1}. ${r.id} · ${r.failure_type || "—"}</span>
+          <strong>${fmt(r.overall)}</strong>
+        </button>
+      `).join("") || "<p class='sub'>Không có kết quả.</p>";
+
+      document.querySelectorAll("#worstList [data-id]").forEach((el) => {
+        el.addEventListener("click", () => selectCase(el.dataset.id));
+      });
+
+      renderTable();
+      document.getElementById("statusLine").textContent =
+        data.benchmark?.error
+          ? data.benchmark.error
+          : `Loaded ${results.length} results.`;
+      if (data.benchmark?.error) {
+        document.getElementById("statusLine").classList.add("error");
+      }
+    }
+
+    function renderTable() {
+      const q = document.getElementById("searchInput").value.trim().toLowerCase();
+      const diff = document.getElementById("diffFilter").value;
+      const pass = document.getElementById("passFilter").value;
+
+      const rows = state.results.filter((r) => {
+        if (diff !== "all" && r.difficulty !== diff) return false;
+        if (pass === "pass" && !r.passed) return false;
+        if (pass === "fail" && r.passed) return false;
+        if (!q) return true;
+        return `${r.id} ${r.question}`.toLowerCase().includes(q);
+      });
+
+      document.getElementById("caseTable").innerHTML = rows.map((r) => `
+        <tr data-id="${r.id}" class="${state.selected === r.id ? "active" : ""}">
+          <td><strong>${r.id}</strong></td>
+          <td><span class="badge diff">${r.difficulty}</span></td>
+          <td>${fmt(r.overall)}</td>
+          <td><span class="badge ${r.passed ? "pass" : "fail"}">${r.passed ? "Pass" : (r.failure_type || "Fail")}</span></td>
+        </tr>
+      `).join("");
+
+      document.querySelectorAll("#caseTable tr").forEach((tr) => {
+        tr.addEventListener("click", () => selectCase(tr.dataset.id));
+      });
+    }
+
+    async function selectCase(id) {
+      state.selected = id;
+      renderTable();
+      document.getElementById("caseDetail").innerHTML = `<p class="sub">Đang tải ${id}…</p>`;
+      const res = await fetch(`/api/case?id=${encodeURIComponent(id)}`);
+      const data = await res.json();
+      if (data.error) {
+        document.getElementById("caseDetail").innerHTML = `<p class="status error">${data.error}</p>`;
+        return;
+      }
+      const r = data.result || {};
+      const g = data.golden || {};
+      const a = data.actual || {};
+      document.getElementById("caseDetail").innerHTML = `
+        <p class="eyebrow">${g.id} · ${g.difficulty}${g.attack_type ? " · " + g.attack_type : ""}</p>
+        <h3 class="q">${g.question || r.question || ""}</h3>
+        <div class="scores">
+          <div class="score-box"><small>Overall</small><strong>${fmt(r.overall)}</strong></div>
+          <div class="score-box"><small>Faithfulness</small><strong>${fmt(r.faithfulness)}</strong></div>
+          <div class="score-box"><small>Relevance</small><strong>${fmt(r.relevance)}</strong></div>
+          <div class="score-box"><small>Completeness</small><strong>${fmt(r.completeness)}</strong></div>
+          <div class="score-box"><small>Ctx Recall</small><strong>${fmt(r.context_recall)}</strong></div>
+          <div class="score-box"><small>Ctx Precision</small><strong>${fmt(r.context_precision)}</strong></div>
+        </div>
+        <div>
+          <h3>Expected</h3>
+          <div class="mono">${escapeHtml(g.expected_answer || "")}</div>
+        </div>
+        <div>
+          <h3>Actual</h3>
+          <div class="mono">${escapeHtml(a.actual_answer || r.actual_answer || "")}</div>
+        </div>
+      `;
+      document.getElementById("cases").scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function escapeHtml(text) {
+      return String(text)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;");
+    }
+
+    async function loadAll() {
+      document.getElementById("statusLine").textContent = "Đang tải…";
+      document.getElementById("statusLine").classList.remove("error");
+      try {
+        const res = await fetch("/api/overview");
+        const data = await res.json();
+        renderOverview(data);
+        if (!state.selected && data.benchmark?.results?.length) {
+          // keep detail empty until user clicks
+        }
+      } catch (err) {
+        document.getElementById("statusLine").textContent = String(err);
+        document.getElementById("statusLine").classList.add("error");
+      }
+    }
+
+    document.getElementById("reloadBtn").addEventListener("click", loadAll);
+    document.getElementById("searchInput").addEventListener("input", renderTable);
+    document.getElementById("diffFilter").addEventListener("change", renderTable);
+    document.getElementById("passFilter").addEventListener("change", renderTable);
+    loadAll();
+  </script>
+</body>
+</html>
